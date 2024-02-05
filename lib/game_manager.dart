@@ -32,4 +32,10 @@ class GameManager extends FlameGame with PanDetector {
     super.onPanUpdate(info);
     _gameScreen.onPanUpdate(info);
   }
+
+  void endGame(int score) {
+    remove(_gameScreen);
+    _mainScreen.setScore(score);
+    add(_mainScreen);
+  }
 }

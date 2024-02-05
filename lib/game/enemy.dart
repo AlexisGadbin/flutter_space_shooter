@@ -1,15 +1,17 @@
 import 'dart:math';
 
 import 'package:flame/cache.dart';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_space_shooter/game/bullet.dart';
 import 'package:flutter_space_shooter/game_manager.dart';
 
-class Enemy extends SpriteAnimationComponent with HasGameRef<GameManager> {
+class Enemy extends SpriteAnimationComponent
+    with HasGameRef<GameManager>, CollisionCallbacks {
   final double _speed = 200;
 
-  final VoidCallback onTouch;
+  final Function(Vector2) onTouch;
 
   Enemy(this.onTouch);
 
@@ -29,6 +31,10 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<GameManager> {
     width = size;
     height = size;
     anchor = Anchor.center;
+
+    add(RectangleHitbox(
+      collisionType: CollisionType.passive,
+    ));
   }
 
   void move(Vector2 delta) {
@@ -41,6 +47,15 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<GameManager> {
     position += Vector2(0, 1) * _speed * dt;
     if (position.y > gameRef.size.y) {
       removeFromParent();
+    }
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+    if (other is Bullet) {
+      removeFromParent();
+      onTouch.call(other.position);
     }
   }
 }

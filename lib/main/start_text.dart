@@ -10,7 +10,7 @@ class StartText extends SpriteComponent with HasGameRef<GameManager> {
 
     var originalSize = sprite?.originalSize;
     if (originalSize == null) return;
-    var height = gameRef.size.toSize().height / 5;
+    var height = gameRef.size.toSize().height / 15;
     var width =
         originalSize.toSize().width * (height / originalSize.toSize().height);
     size = Vector2(width, height);
